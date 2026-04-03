@@ -58,13 +58,19 @@ class MimeTypeDetector
      */
     public function getMimeType(): ?string
     {
-        if (!$this->filePath) {
+  
+         if (!$this->filePath) {
             throw new ValidationException(['upload' => 'File path is not set.']);
         }
 
         try {
             // Get MIME from php-mime-detector
-            $detectorMime = $this->getMimeInternally();
+           $detectorMime = $this->getMimeInternally();
+
+            // Special handling for ANYs (before mismatch rejection)
+            if ($detectorMime === 'application/vnd.anyrail') {
+                return 'application/vnd.anyrail';
+            }
 
             // Get MIME from PHP Fileinfo
             $fileinfoMime = mime_content_type($this->filePath);
@@ -93,6 +99,7 @@ class MimeTypeDetector
 
             return $detectorMime;
         } catch (\Exception $e) {
+            resolve('log')->error("[fof/upload] Could not detect MIME type.");
             throw new ValidationException(['upload' => 'Could not detect MIME type.']);
         }
     }

@@ -97,9 +97,16 @@ class DefaultDownloader implements Downloader
      */
     protected function mutateHeaders(ResponseInterface $response, File $file)
     {
-        $response = $response->withHeader('Content-Type', 'application/force-download');
-        $response = $response->withAddedHeader('Content-Type', 'application/octet-stream');
-        $response = $response->withAddedHeader('Content-Type', 'application/download');
+        //$response = $response->withHeader('Content-Type', 'application/force-download');
+
+        //$response = $response->withAddedHeader('Content-Type', 'application/download');
+
+        if ($file->type) {
+          $response = $response->withAddedHeader('Content-Type', $file->type);
+        }
+        else {
+            $response = $response->withAddedHeader('Content-Type', 'application/octet-stream');
+        }
 
         $response = $response->withHeader('Content-Transfer-Encoding', 'binary');
 
