@@ -15,6 +15,7 @@ namespace FoF\Upload\Providers;
 use Flarum\Foundation\AbstractServiceProvider;
 use FoF\Upload\Mime\Mapping\AbstractMimeMap;
 use FoF\Upload\Mime\Mapping\APK;
+use FoF\Upload\Mime\Mapping\ANY7;
 
 class MimeMappingProvider extends AbstractServiceProvider
 {
@@ -22,6 +23,7 @@ class MimeMappingProvider extends AbstractServiceProvider
     {
         $mappings = [
             APK::class,
+            ANY7::class,            
         ];
 
         $this->container->singleton('fof-upload.mime-mappings', function () use ($mappings) {

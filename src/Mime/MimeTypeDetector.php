@@ -67,6 +67,11 @@ class MimeTypeDetector
             $detectorMime = $this->getMimeInternally();
 
             if (self::fileinfoAvailable()) {
+                // Special handling for ANYs (before mismatch rejection)
+                if ($detectorMime === 'application/vnd.anyrail') {
+                    return 'application/vnd.anyrail';
+                }
+
                 // Get MIME from PHP Fileinfo for cross-validation
                 $fileinfoMime = mime_content_type($this->filePath);
 
@@ -104,6 +109,7 @@ class MimeTypeDetector
         } catch (ValidationException $e) {
             throw $e;
         } catch (\Exception $e) {
+            resolve('log')->error("[fof/upload] Could not detect MIME type.");        
             throw new ValidationException(['upload' => 'Could not detect MIME type.']);
         }
     }
